@@ -1,0 +1,37 @@
+<launch>
+  <!-- 接收参数 -->
+  <arg name="robot_name" />
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="z" default="0.0"/>
+  <arg name="yaw" default="0.0"/>
+  <arg name="model_xacro" default="$(find scout_gazebo)/urdf/base.xacro"/>
+
+  <!-- 加载机器人 -->
+  <group ns="$(arg robot_name)">
+    
+    <!-- 加载 robot_description -->
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model_xacro) robot_namespace:=$(arg robot_name)" />
+    
+    <!-- joint_state_publisher -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+
+    <!-- robot_state_publisher -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+      <param name="tf_prefix" value="$(arg robot_name)"/>
+    </node>
+
+    <!-- 加载到 Gazebo -->
+    <node pkg="gazebo_ros" type="spawn_model" name="spawn_$(arg robot_name)" output="screen"
+          args="-urdf -model $(arg robot_name) -param robot_description 
+                -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg yaw)" />
+
+    <!-- 加载控制器参数 -->
+    <rosparam file="$(find scout_gazebo)/config/velodyne_controller.yaml" command="load" ns="$(arg robot_name)"/>
+
+    <!-- 加载控制器 -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+          output="screen" ns="/$(arg robot_name)" 
+          args="swiveljoint_state_controller swiveljoint1_velocity_controller --shutdown-timeout 30"/>
+  </group>
+</launch>

@@ -1,0 +1,59 @@
+rigelslam_rot:
+  detector_config_path: /home/zzy/SLAM/MRI-MMS/src/Rot_SLAM/config/LoopConfig.yaml
+  saveDirectory: /home/zg/catkin_ws/tmp/
+  saveRawPath: /home/zg/catkin_ws/renderbag/2024-11-18-16-46-49.raw
+  equipmentParamsFile: /home/zzy/SLAM/MRI-MMS/src/Rot_SLAM/config/equipment_param_sim.txt
+  isPlayBackTask: false
+  playBackFileName: /home/zg/catkin_ws/originbag/2024-11-18-16-46-49.bin
+  isContinueTask: false
+  scanSceneName: Indoor
+  isOutputIMU: true
+  isOutputFeature: false
+  minRange: 1.0
+  maxRange: 80.0
+  scanLines: 16
+  historyKeyframeSearchRadius: 10
+  loopcorrect: false
+  loopClosureEnableFlag: false
+  useintensity: false
+  ridus_k: 1.5
+  cov_type: 1
+  updatemethod: 0 #0:Ikfom 1:LSQ with IMU
+  saveMap: false
+  GravityAlign: false
+  usemutiview: true
+  map_path: /media/zzy/T7/MRI-MMS_EXP/mapping/curvetunnel/ours/MapCloud_down.pcd
+
+
+model_path: /home/zzy/SLAM/MRI-MMS/src/Rot_SLAM/weights/gpu.pt
+visualize_en_: 1
+draw_keypoints_: 1
+
+down_sample_matches_: 0
+
+
+# bev:
+#    resolution: 0.1
+#    max_x_: 50.0
+#    min_x_: -150.0
+#    max_y_: 100.0
+#    min_y_: -120.0
+#    premapdownsampleLeaf: 1.0
+
+bev:
+   resolution: 0.1
+   gicpthreshold: 0.1
+   premapdownsampleLeaf: 1.0
+
+
+# bev:
+#    resolution: 0.1
+#    max_x_: 20.0
+#    min_x_: -20.0
+#    max_y_: 20.0
+#    min_y_: -20.0
+
+
+image:
+   matcher: "BruteForce-Hamming"
+   match_mode: "ransac"

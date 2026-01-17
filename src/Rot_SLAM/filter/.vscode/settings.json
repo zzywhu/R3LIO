@@ -1,0 +1,13 @@
+{
+    "ros.distro": "melodic",
+    "python.autoComplete.extraPaths": [
+        "/home/zzy/SLAM/my_slam_work/devel/lib/python2.7/dist-packages",
+        "/home/zzy/driver/livox_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/zzy/SLAM/my_slam_work/devel/lib/python2.7/dist-packages",
+        "/home/zzy/driver/livox_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ]
+}

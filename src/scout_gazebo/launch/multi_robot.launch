@@ -1,0 +1,33 @@
+<launch>
+  <!-- 启动 Gazebo 世界 -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find scout_gazebo)/worlds/office.world" />
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- 加载 scout1 -->
+  <include file="$(find scout_gazebo)/launch/single_robot.launch">
+    <arg name="robot_name" value="scout1"/>
+    <arg name="x" value="-1.0"/>
+    <arg name="y" value="0.0"/>
+    <arg name="z" value="0.0"/>
+    <arg name="yaw" value="0.0"/>
+  </include>
+
+  <!-- 加载 scout2 -->
+  <include file="$(find scout_gazebo)/launch/single_robot.launch">
+    <arg name="robot_name" value="scout2"/>
+    <arg name="x" value="2.0"/>
+    <arg name="y" value="1.0"/>
+    <arg name="z" value="0.0"/>
+    <arg name="yaw" value="0.0"/>
+  </include>
+
+  <!-- 加载 RViz -->
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find scout_gazebo)/config/show_robot.rviz" 
+        launch-prefix="bash -c 'sleep 8; $0 $@'" /> -->
+</launch>

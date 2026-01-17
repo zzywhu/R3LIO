@@ -1,0 +1,12 @@
+<launch>
+  <!-- 加载控制器参数 -->
+  <rosparam file="$(find scout_gazebo)/config/velodyne_controllers.yaml" command="load"/>
+
+  <!-- 启动 controller -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" args="velodyne_spin_joint_velocity_controller"/>
+
+  <!-- 开机默认转速 1 rad/s -->
+  <node name="velodyne_default_speed" pkg="rostopic" type="rostopic" args="pub -r 10 /velodyne_spin_joint_velocity_controller/command std_msgs/Float64 '1.0'"/>
+
+</launch>

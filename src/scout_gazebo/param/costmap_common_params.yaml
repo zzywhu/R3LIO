@@ -1,0 +1,41 @@
+# 机器人几何参数
+footprint: [[-0.325, -0.325], [-0.325, 0.325], [0.325, 0.325], [0.325, -0.325]]
+# robot_radius: 0.46  # Pioneer 3AT机器人半径
+
+# 膨胀参数
+inflation_radius: 0.4  # 膨胀半径
+cost_scaling_factor: 10.0  # 代价缩放因子
+
+# 障碍物层参数
+obstacle_range: 6.0  # 障碍物检测范围
+raytrace_range: 8.0  # 光线追踪范围
+
+# 观测源配置
+observation_sources: laser_scan_sensor
+
+laser_scan_sensor:
+  sensor_frame: velodyne
+  data_type: LaserScan
+  topic: /base_scan
+  marking: true
+  clearing: true
+  max_obstacle_height: 2.0
+  min_obstacle_height: 0.0
+  obstacle_range: 6.0
+  raytrace_range: 8.0
+  inf_is_valid: true
+
+# 代价地图通用设置
+transform_tolerance: 0.2
+map_type: costmap
+track_unknown_space: false
+unknown_cost_value: -1
+lethal_cost_threshold: 100
+z_resolution: 0.2
+z_voxels: 10
+
+# 层配置
+plugins:
+  - {name: static_layer, type: "costmap_2d::StaticLayer"}
+  - {name: obstacle_layer, type: "costmap_2d::VoxelLayer"}
+  - {name: inflation_layer, type: "costmap_2d::InflationLayer"}

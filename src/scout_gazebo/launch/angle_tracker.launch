@@ -1,0 +1,4 @@
+<launch>
+  <!-- 启动雷达角度跟踪器节点 -->
+  <node name="lidar_angle_tracker" pkg="scout_gazebo" type="lidar_angle_tracker.py" output="screen" />
+</launch>

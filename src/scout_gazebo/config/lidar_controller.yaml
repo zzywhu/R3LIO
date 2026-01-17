@@ -1,0 +1,11 @@
+scout_v2:
+  swiveljoint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+
+
+  swiveljoint1_velocity_controller:
+    type: effort_controllers/JointVelocityController
+    joint: lidar_platform
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+

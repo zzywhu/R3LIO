@@ -1,0 +1,150 @@
+<?xml version="1.0" ?>
+<robot name="swivel" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <material name="SwivelWhite">    <color rgba="1.0 1.0 1.0 1"/></material>
+  <material name="SwivelLightGray"><color rgba="0.8 0.8 0.8 1"/></material>
+  <material name="SwivelMedGray">  <color rgba="0.6 0.6 0.6 1"/></material>
+  <material name="SwivelDarkGray"> <color rgba="0.4 0.4 0.4 1"/></material>
+  <material name="SwivelRed">      <color rgba="0.5 0.4 0.4 1"/></material>
+  <material name="SwivelGreen">    <color rgba="0.4 0.5 0.4 1"/></material>
+  <material name="SwivelBlue">     <color rgba="0.4 0.4 0.5 1"/></material>
+
+  <!-- ros_control plugin  配套的gazebo控制插件-->
+    <gazebo>
+      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+         <robotNamespace>/swivel</robotNamespace>
+        <controlPeriod>0.01</controlPeriod>
+        <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      </plugin>
+    </gazebo>
+
+  <link name="base">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry >
+				<box size="0.1 0.1 0.02" />
+      </geometry>
+        <material name="SwivelLightGray" /> 
+    </visual>
+        <!-- gazebo里collision必须有 碰撞属性 -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry >
+				<box size="0.1 0.1 0.02" />
+      </geometry>
+    </collision>  
+            <!-- gazebo里inertial必须有 惯性属性 --> 
+     <inertial>
+        <mass value="9"/>
+        <inertia ixx="9.0" ixy="0.0" ixz="0.0" iyy="9.0" iyz="0.0" izz="9.0"/>
+      </inertial> 
+  </link>
+    <!-- gazebo里加载 相应link -->
+  <gazebo reference="base">
+       <material>Gazebo/Gray</material>
+  </gazebo>
+
+
+  <!-- 竖轴 link_1  长立方体 蓝色  可绕底盘z轴转360度  -->
+  <link name="link_1">
+    <visual>
+      <origin xyz="0 0 0.06" rpy="0 0 0" />
+      <geometry >
+	      <box size="0.05 0.05 0.1" />
+      </geometry>
+      <material name="SwivelBlue" />
+     </visual>
+     <!-- gazebo里collision必须有 碰撞属性 -->
+    <collision>
+      <origin xyz="0 0 0.06" rpy="0 0 0" />
+      <geometry >
+	      <box size="0.05 0.05 0.1" />
+      </geometry>
+    </collision> 
+                <!-- gazebo里inertial必须有 惯性属性 --> 
+     <inertial>
+        <mass value="4"/>
+        <inertia ixx="4.0" ixy="0.0" ixz="0.0" iyy="4.0" iyz="0.0" izz="4.0"/>
+      </inertial> 
+  </link>
+  <gazebo reference="link_1">
+       <material>Gazebo/Blue</material>
+  </gazebo>
+
+    <!-- 底盘与竖轴的joint swivel_J0  --> 
+  <joint name="swivel_J0" type="revolute"> <!-- revolute 旋转关节 -->
+    <parent link="base"/>
+    <child link="link_1"/>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" /> <!-- 旋转轴为z轴 -->
+    <limit lower="0" upper="6.28" effort="10" 
+	   velocity="1.0" /> <!-- 旋转角度范围为0-360度 单向旋转 -->
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+    <!-- gazebo里加载 相应joint -->
+    <gazebo reference="swivel_J0">
+    <provideFeedback>true</provideFeedback>
+    </gazebo>
+
+   <!-- 传动装置 tran1 ，joint ：swivel_J0 的  -->  <!--transmission的作用：在ROS中连接虚拟关节和实际电机的桥梁-->
+ <transmission name="tran1"><!-- 名字自定义  --> 
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="swivel_J0"><!-- 名字必须与swivel_J0对应一致  --> 
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor1"><!-- 名字自定义  --> 
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+        <!-- 横轴 link_2  立方体 红色--> 
+  <link name="link_2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry >
+      	<box size="0.1 0.2 0.1" />
+      </geometry>
+      <material name="SwivelRed" />
+    </visual>
+  <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry >
+      	<box size="0.1 0.2 0.1" />
+      </geometry>
+    </collision> 
+        <inertial>
+        <mass value="2"/>
+        <inertia ixx="2.0" ixy="0.0" ixz="0.0" iyy="2.0" iyz="0.0" izz="2.0"/>
+      </inertial> 
+  </link>
+    <gazebo reference="link_2">
+       <material>Gazebo/Red</material>
+  </gazebo>
+
+      <!-- 竖轴与横轴 的joint  做俯仰运动--> 
+  <joint name="swivel_J1" type="continuous"> <!-- continuous 连续关节 -->
+    <parent link="link_1"/>
+    <child link="link_2"/>
+    <origin xyz="0 0 0.190" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit lower="-1.745" upper="2.356" effort="10"
+	   velocity="1.0" />
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  <!-- 传动装置 tran1 ，joint ：swivel_J1 的  --> 
+<transmission name="tran2"><!-- 名字自定义  --> 
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="swivel_J1"> <!-- 名字必须与swivel_J1对应一致  --> 
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor2"> <!-- 名字自定义  --> 
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+    
+</robot>

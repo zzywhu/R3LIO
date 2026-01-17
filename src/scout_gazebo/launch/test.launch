@@ -1,0 +1,34 @@
+<launch>
+    <arg name = "model_xacro" default = "$(find scout_gazebo)/urdf/base.xacro" />
+    <!-- 将 Urdf 文件的内容加载到参数服务器 -->
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model_xacro)" />
+    <!-- Launch  the robot state publisher -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+        <param name="publish_frequency" value="400.0" />
+    </node>
+    <!-- Loading rviz files -->
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find scout_gazebo)/config/show_robot.rviz" />  -->
+    
+    <!-- 在 gazebo 中启动一个环境 -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch"> 
+        <arg name="world_name" value="$(find scout_gazebo)/worlds/office.world" /> 
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+    
+    <!-- 在 gazebo 中加载机器人模型  -->
+    <node pkg="gazebo_ros" type="spawn_model" name="model" args="-urdf -model scout -param robot_description"  />  
+
+    <!-- 加载velodyne控制器参数 -->
+    <!-- <rosparam file="$(find scout_gazebo)/config/velodyne_controller.yaml" command="load" /> -->
+
+    <!-- 启动controller_manager -->
+    <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+          output="screen"
+          args="velodyne_spin_joint_velocity_controller" /> -->
+    <!-- 开机默认转速 1 rad/s -->
+    <!-- <node name="velodyne_default_speed" pkg="rostopic" type="rostopic" args="pub -r 10 /velodyne_spin_joint_velocity_controller/command std_msgs/Float64 '1.0'"/> -->
+</launch>

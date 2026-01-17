@@ -1,0 +1,14 @@
+<launch>
+  <!-- Launch file for velodyne16 VLP-16 LiDAR -->
+
+    <arg name="rviz" default="true" />
+  <rosparam file="$(find rigelslam_rot)/config/params_sim.yaml" command="load" />
+   <node pkg="rigelslam_rot" type="Sim" name="Sim" output="screen" />
+
+    <group if="$(arg rviz)">
+<node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find rigelslam_rot)/rviz_config/loam_livox_color.rviz" /> 
+<!-- <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find rigelslam_rot)/rviz_config/loam_livox1.rviz" /> -->
+    </group>
+
+
+</launch>

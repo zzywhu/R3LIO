@@ -1,0 +1,84 @@
+# 轨迹规划器参数 (TrajectoryPlannerROS)
+TrajectoryPlannerROS:
+  # 机器人速度限制
+  max_vel_x: 0.6          # 最大前进速度 (m/s)
+  min_vel_x: 0.1          # 最小前进速度 (m/s)
+  max_vel_theta: 1.0      # 最大角速度 (rad/s)
+  min_in_place_vel_theta: 0.4  # 原地旋转最小角速度
+  
+  # 加速度限制
+  acc_lim_x: 2.5          # x方向加速度限制
+  acc_lim_y: 0.0          # y方向加速度限制 (差分驱动为0)
+  acc_lim_theta: 3.2      # 角加速度限制
+  
+  # 机器人运动学模型
+  holonomic_robot: false  # 非全向机器人
+  
+  # 轨迹生成参数
+  sim_time: 2.0           # 仿真时间
+  sim_granularity: 0.025  # 仿真粒度
+  angular_sim_granularity: 0.025  # 角度仿真粒度
+  
+  # 轨迹评估参数
+  path_distance_bias: 0.6      # 路径距离权重
+  goal_distance_bias: 0.8      # 目标距离权重
+  occdist_scale: 0.01          # 障碍物距离权重
+  heading_lookahead: 0.325     # 朝向前瞻距离
+  heading_scoring: false       # 关闭朝向评分
+  heading_scoring_timestep: 0.8  # 朝向评分时间步长
+  dwa: true                    # 启用动态窗口法
+  
+  # 前瞻点参数
+  publish_cost_grid_pc: false  # 不发布代价网格点云
+  global_frame_id: camera_init      # 全局坐标系
+  
+  # 振荡抑制
+  oscillation_reset_dist: 0.05  # 振荡重置距离
+  
+  # 轨迹采样
+  vx_samples: 6            # x方向速度采样数
+  vtheta_samples: 20       # 角度采样数
+  
+  # 其他参数
+  meter_scoring: true      # 使用米制评分
+  simple_attractor: false  # 关闭简单吸引器
+  
+  # 逃逸参数
+  escape_reset_dist: 0.1
+  escape_reset_theta: 0.1
+
+# 全局规划器参数 (GlobalPlanner)
+GlobalPlanner:
+  old_navfn_behavior: false      # 使用新的导航行为
+  use_quadratic: true            # 使用二次插值
+  use_dijkstra: true             # 使用Dijkstra算法
+  use_grid_path: false           # 不使用网格路径
+  allow_unknown: true            # 允许通过未知区域
+  planner_window_x: 0.0          # 规划窗口x
+  planner_window_y: 0.0          # 规划窗口y
+  default_tolerance: 0.0         # 默认容差
+  publish_scale: 100             # 发布缩放
+  planner_costmap_publish_frequency: 0.0  # 代价地图发布频率
+  lethal_cost: 253               # 致命代价
+  neutral_cost: 50               # 中性代价
+  cost_factor: 3.0               # 代价因子
+  publish_potential: true        # 发布势场
+
+# 恢复行为参数
+recovery_behavior_enabled: true
+clearing_rotation_allowed: true
+aggressive_reset: false
+
+# Move Base 参数
+shutdown_costmaps: false         # 关闭时不清除代价地图
+controller_frequency: 5.0       # 控制器频率
+planner_patience: 5.0           # 规划器耐心值
+controller_patience: 15.0       # 控制器耐心值
+conservative_reset_dist: 3.0    # 保守重置距离
+recovery_behaviors:
+  - name: 'conservative_reset'
+    type: 'clear_costmap_recovery/ClearCostmapRecovery'
+  - name: 'rotate_recovery'
+    type: 'rotate_recovery/RotateRecovery'
+  - name: 'aggressive_reset'
+    type: 'clear_costmap_recovery/ClearCostmapRecovery'
