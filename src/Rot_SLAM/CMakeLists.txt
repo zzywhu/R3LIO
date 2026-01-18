@@ -130,14 +130,12 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
 
     if(N GREATER 4)
         add_definitions(-DMP_EN)
-#        math(EXPR PROC_NUM "(${N} / 2)")
-#        add_definitions(-DMP_PROC_NUM=${PROC_NUM})
-        add_definitions(-DMP_PROC_NUM=3)
-        message("core for MP: 3")
-    elseif(N GREATER 3)
-        add_definitions(-DMP_EN)
         add_definitions(-DMP_PROC_NUM=2)
         message("core for MP: 2")
+    elseif(N GREATER 3)
+        add_definitions(-DMP_EN)
+        add_definitions(-DMP_PROC_NUM=1)
+        message("core for MP: 1")
     else()
         add_definitions(-DMP_PROC_NUM=1)
     endif()
@@ -300,12 +298,12 @@ target_compile_definitions(Feature PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPOR
 
 file(GLOB_RECURSE Initializer_SRC "src/Initializer/*.cpp")
 add_library(Initializer SHARED ${Initializer_SRC})
-target_link_libraries(Initializer ${PCL_LIBRARIES} ${PTHREADS_LIBRARY} ${CERES_LIBRARIES} ${PYTHON_LIBRARIES})
+target_link_libraries(Initializer ${PCL_LIBRARIES} ${PTHREADS_LIBRARY} ${CERES_LIBRARIES})
 target_compile_definitions(Initializer PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPORTS__>)
 
 file(GLOB_RECURSE Mapper_SRC "src/Mapper/*.cpp")
 add_library(Mapper SHARED ${Mapper_SRC})
-target_link_libraries(Mapper Misc ${PCL_LIBRARIES} ${PTHREADS_LIBRARY} ${CERES_LIBRARIES})
+target_link_libraries(Mapper Misc ${PCL_LIBRARIES} ${PTHREADS_LIBRARY})
 target_compile_definitions(Mapper PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPORTS__>)
 
 file(GLOB_RECURSE Matcher_SRC "src/Matcher/*.cpp")
@@ -333,12 +331,12 @@ endif()
 
 file(GLOB_RECURSE SensorProcess_SRC "src/SensorProcess/*.cpp")
 add_library(SensorProcess SHARED ${SensorProcess_SRC})
-target_link_libraries(SensorProcess Mapper Misc ${PCL_LIBRARIES} ${PTHREADS_LIBRARY} ${CERES_LIBRARIES} gtsam)
+target_link_libraries(SensorProcess Mapper Misc ${PCL_LIBRARIES} ${PTHREADS_LIBRARY} ${CERES_LIBRARIES})
 target_compile_definitions(SensorProcess PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPORTS__>)
 
 file(GLOB_RECURSE BEVProcess_SRC "src/BEVProcess/*.cpp")
 add_library(BEVProcess SHARED ${BEVProcess_SRC})
-target_link_libraries(BEVProcess Mapper Misc ${PCL_LIBRARIES} ${PTHREADS_LIBRARY} ${CERES_LIBRARIES} ${OpenCV_LIBRARIES} gtsam)
+target_link_libraries(BEVProcess Mapper Misc ${PCL_LIBRARIES} ${PTHREADS_LIBRARY} ${OpenCV_LIBRARIES})
 target_compile_definitions(BEVProcess PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPORTS__>)
 
 file(GLOB_RECURSE Viewer_SRC "src/Viewer/*.cpp")
@@ -348,12 +346,12 @@ target_compile_definitions(Viewer PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPORT
 
 file(GLOB_RECURSE LoopCloser_SRC "src/LoopCloser/*.cpp")
 add_library(LoopCloser SHARED ${LoopCloser_SRC})
-target_link_libraries(LoopCloser Misc Mapper Registrator Feature Optimizer DataIO ${PCL_LIBRARIES} ${PTHREADS_LIBRARY} ${CERES_LIBRARIES} gtsam)
+target_link_libraries(LoopCloser Misc Mapper Registrator Feature Optimizer DataIO ${PCL_LIBRARIES} ${PTHREADS_LIBRARY})
 target_compile_definitions(LoopCloser PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPORTS__>)
 
 file(GLOB_RECURSE xfeat_SRC "src/xfeat/*.cpp")
 add_library(xfeat SHARED ${xfeat_SRC})
-target_link_libraries(xfeat ${OpenCV_LIBS} ${TORCH_LIBRARIES} Misc Mapper Registrator Feature Optimizer DataIO ${PCL_LIBRARIES} ${PTHREADS_LIBRARY} ${CERES_LIBRARIES} gtsam)
+target_link_libraries(xfeat ${OpenCV_LIBS} ${TORCH_LIBRARIES} ${PCL_LIBRARIES} ${PTHREADS_LIBRARY})
 target_compile_definitions(xfeat PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPORTS__>)
 
 file(GLOB_RECURSE mlsd_SRC "src/MLSD/*.cpp")
@@ -363,12 +361,12 @@ target_compile_definitions(mlsd PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPORTS_
 
 file(GLOB_RECURSE imgp_SRC "src/ImageProcess/*.cpp")
 add_library(imgp SHARED ${imgp_SRC})
-target_link_libraries(imgp ${OpenCV_LIBS} ${PCL_LIBRARIES} Mapper mlsd) 
+target_link_libraries(imgp ${OpenCV_LIBS} ${PCL_LIBRARIES} mlsd) 
 target_compile_definitions(imgp PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPORTS__>)
 
-file(GLOB_RECURSE imgp_SRC "src/patchwork/*.cpp")
-add_library(patchwork SHARED ${imgp_SRC})
-target_link_libraries(patchwork ${OpenCV_LIBS} ${PCL_LIBRARIES} Mapper mlsd) 
+file(GLOB_RECURSE patchwork_SRC "src/patchwork/*.cpp")
+add_library(patchwork SHARED ${patchwork_SRC})
+target_link_libraries(patchwork ${OpenCV_LIBS} ${PCL_LIBRARIES}) 
 target_compile_definitions(patchwork PRIVATE $<$<CXX_COMPILER_ID:MSVC>:__DLL_EXPORTS__>)
 
 SET(cv_bridge_LIBRARIES "/opt/ros/noetic/lib/libcv_bridge.so")

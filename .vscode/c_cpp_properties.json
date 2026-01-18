@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/zzy/SLAM/R3LIO/devel/include/**",
+        "/home/zzy/ros_driver/devel/include/**",
+        "/home/zzy/SLAM/MRI-MMS/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/zzy/SLAM/R3LIO/src/Rot_SLAM/include/**",
+        "/home/zzy/ros_driver/src/turn_on_wheeltec_robot/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
