@@ -33,7 +33,13 @@
 
 PCD/*
 
+image/*
+
+paper/*
+
 BEV/*
 
 MapResult/*
+
+BAdata/*
 

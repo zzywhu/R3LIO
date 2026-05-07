@@ -13,10 +13,10 @@ rigelslam_rot:
   maxRange: 80.0
   scanLines: 16
   historyKeyframeSearchRadius: 10
-  loopcorrect: false
+  loopcorrect: true
   loopClosureEnableFlag: true
   useintensity: false
-  ridus_k: 1.5
+  ridus_k: 3.0
   cov_type: 1
   updatemethod: 0 #0:Ikfom 1:LSQ with IMU
   saveMap: true

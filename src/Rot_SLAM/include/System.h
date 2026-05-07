@@ -266,6 +266,7 @@ class SYSTEM_API System {
         _trajCloud(new PointCloudXYZI()),
         _lidarProcessor(new LidarProcess()),
         fout_traj(string(ROOT_DIR) + "MapResult/traj.txt", std::ios::out),
+        fout_traj_ba(),
         _imuProcessor(new ImuProcess()),
         _initiatorLI(nullptr),
         _jacoRot(MatrixXd(30000, 3)),
@@ -729,6 +730,7 @@ class SYSTEM_API System {
   Eigen::Vector3d _tl2l;
   Eigen::Matrix4d _prevTwl;
   std::ofstream fout_traj;
+  std::ofstream fout_traj_ba;
 
   std::vector<Eigen::Matrix4d> _relToList;
   std::vector<Eigen::Matrix4d> _relTlList;

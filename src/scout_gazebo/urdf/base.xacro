@@ -39,11 +39,29 @@
    
     <xacro:include filename="$(find scout_gazebo)/urdf/laser_support.xacro" />
 
-    <!-- 添加一个中间link，与水平面成30度夹角 - 这是固定的倾斜支架 -->
+    <!-- 雷达安装支架 link #1 - 将厚度减至最小 -->
+    <link name="velodyne_mount">
+    <visual>
+        <geometry>
+        <cylinder length="0.001" radius="0.05"/>  <!-- 厚度减至1mm，几乎不可见 -->
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <material name="grey">
+            <color rgba="0.7 0.7 0.7 0.3" />  <!-- 半透明灰色，几乎不可见 -->
+        </material>
+    </visual>
+    <inertial>
+        <mass value="0.01"/>  <!-- 减小质量 -->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="5e-6" iyy="5e-6" izz="5e-6" ixy="0" ixz="0" iyz="0"/>  <!-- 减小惯性矩 -->
+    </inertial>
+    </link>
+
+    <!-- 添加一个中间link，与水平面成30度夹角，改为小球 -->
     <link name="tilt_link">
     <visual>
         <geometry>
-        <sphere radius="0.005"/>  <!-- 小球标记倾斜点 -->
+        <sphere radius="0.005"/>  <!-- 改为小球 -->
         </geometry>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <material name="red">
@@ -53,7 +71,7 @@
     <inertial>
         <mass value="0.02"/>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <inertia ixx="1.8e-6" iyy="1.8e-6" izz="1.8e-6" ixy="0" ixz="0" iyz="0"/>
+        <inertia ixx="1.8e-6" iyy="1.8e-6" izz="1.8e-6" ixy="0" ixz="0" iyz="0"/>  <!-- 球体惯性矩 -->
     </inertial>
     </link>
 
@@ -61,72 +79,17 @@
     <joint name="tilt_joint" type="fixed">
         <parent link="support"/>
         <child link="tilt_link"/>
-        <origin xyz="0.1 0 ${support_length/2}" rpy="0 ${-M_PI/6} 0"/>  <!-- 绕y轴旋转-30度 -->
+        <origin xyz="0.1 0 ${support_length/2}" rpy="0 ${-M_PI/6} 0"/>  <!-- 改为绕y轴旋转-30度 -->
     </joint>
 
-    <!-- 实体旋转轴 - 这是绕x轴旋转的圆柱轴 -->
-    <link name="rotation_shaft">
-    <visual>
-        <geometry>
-        <cylinder length="0.3" radius="0.02"/>  <!-- 长30cm，半径2cm的圆柱轴 -->
-        </geometry>
-        <origin xyz="0 0 0" rpy="0 ${M_PI/2} 0"/>  <!-- 旋转90度使圆柱沿x轴方向 -->
-        <material name="metal">
-            <color rgba="0.5 0.5 0.5 1.0" />  <!-- 金属灰色 -->
-        </material>
-    </visual>
-    <collision>
-        <geometry>
-        <cylinder length="0.3" radius="0.02"/>
-        </geometry>
-        <origin xyz="0 0 0" rpy="0 ${M_PI/2} 0"/>
-    </collision>
-    <inertial>
-        <mass value="0.5"/>  <!-- 旋转轴质量 -->
-        <origin xyz="0 0 0" rpy="0 ${M_PI/2} 0"/>
-        <inertia ixx="0.00375" iyy="0.00375" izz="0.0001" ixy="0" ixz="0" iyz="0"/>  <!-- 圆柱惯性矩 -->
-    </inertial>
-    </link>
-
-    <!-- 旋转关节，使rotation_shaft绕tilt_link的x轴旋转 -->
+    <!-- 旋转关节，使velodyne_mount绕tilt_link的x轴旋转 -->
     <joint name="velodyne_spin_joint" type="continuous">
         <parent link="tilt_link"/>
-        <child link="rotation_shaft"/>
+        <child link="velodyne_mount"/>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <axis xyz="1 0 0"/>  <!-- 绕x轴旋转 -->
         <limit effort="5.0" velocity="10.0"/>
         <dynamics damping="0.01" friction="0.01"/>
-    </joint>
-
-    <!-- 雷达安装平台 - 固定在旋转轴末端 -->
-    <link name="velodyne_mount">
-    <visual>
-        <geometry>
-        <cylinder length="0.02" radius="0.08"/>  <!-- 2cm厚的圆盘平台 -->
-        </geometry>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <material name="platform">
-            <color rgba="0.2 0.2 0.2 1.0" />  <!-- 深灰色平台 -->
-        </material>
-    </visual>
-    <collision>
-        <geometry>
-        <cylinder length="0.02" radius="0.08"/>
-        </geometry>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-    </collision>
-    <inertial>
-        <mass value="0.2"/>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/>
-    </inertial>
-    </link>
-
-    <!-- 固定关节，将velodyne_mount固定在旋转轴末端 -->
-    <joint name="mount_to_shaft_joint" type="fixed">
-        <parent link="rotation_shaft"/>
-        <child link="velodyne_mount"/>
-        <origin xyz="0.15 0 0" rpy="0 0 0"/>  <!-- 固定在旋转轴末端（x轴正方向15cm处）-->
     </joint>
 
     <!-- transmission (ros_control需要) #3 -->
@@ -144,7 +107,7 @@
      <!-- VLP16 激光雷达 -->
     <xacro:arg name="gpu" default="false"/>
     <xacro:property name="gpu"  value="$(arg gpu)"/>
-     <xacro:arg name="organize_cloud" default="true"/>
+    <xacro:arg name="organize_cloud" default="true"/>
     <xacro:property name="organize_cloud" value="$(arg organize_cloud)"/>
 
     <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
@@ -181,6 +144,17 @@
                 <box size="${base_x_size} ${base_y_size} ${base_z_size}"/>
             </geometry>
         </collision>
+        <inertial>
+            <mass value="40"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia
+                ixx="0.259"
+                ixy="0.0"
+                ixz="0.0"
+                iyy="1.242"
+                iyz="0.0"
+                izz="1.343"/>
+        </inertial>
     </link>
 
     <link name="base_footprint"/>
@@ -188,20 +162,6 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
         <parent link="base_link" />
         <child link="base_footprint" />
-    </joint>
-
-    <link name="inertial_link">
-        <inertial>
-            <mass value="40" />
-            <origin xyz="0.0 0.0 0.0" />
-            <inertia ixx="2.288641" ixy="0" ixz="0" iyy="5.103976" iyz="0" izz="3.431465" />
-        </inertial>
-    </link>
-
-    <joint name="inertial_joint" type="fixed">
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <parent link="base_link" />
-        <child link="inertial_link" />
     </joint>
 
     <!-- 宏  Scout wheel macros -->
@@ -220,18 +180,69 @@
         <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="3.14 0 0" />
     </xacro:scout_wheel_type2>
 
+    <!-- 添加前视相机 link -->
+    <!-- <link name="front_camera_link">
+    <visual>
+        <geometry>
+        <box size="0.04 0.04 0.04"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <material name="black"/>
+    </visual>
+    <inertial>
+        <mass value="0.01"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="1e-6" iyy="1e-6" izz="1e-6" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+    </link> -->
+
+    <!-- 固定关节，将相机安装在base_link前方 -->
+    <!-- <joint name="front_camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="front_camera_link"/>
+    <origin xyz="0.45 0 0.15" rpy="0 0 0"/>
+    </joint> -->
+
+    <!-- gazebo插件：前视相机 -->
+    <!-- <gazebo reference="front_camera_link">
+    <sensor type="camera" name="front_camera">
+        <always_on>true</always_on>
+        <update_rate>30</update_rate>
+        <visualize>true</visualize>
+        <camera>
+        <horizontal_fov>1.047</horizontal_fov>
+        <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+        </image>
+        <clip>
+            <near>0.02</near>
+            <far>50</far>
+        </clip>
+        </camera>
+        <plugin name="gazebo_ros_camera" filename="libgazebo_ros_camera.so">
+        <robotNamespace>/</robotNamespace>
+        <cameraName>front_camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>front_camera_link</frameName>
+        </plugin>
+    </sensor>
+    </gazebo> -->
+
+
     <!-- gazebo_ros_control 插件 #5 -->
     <gazebo>
       <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
         <robotNamespace>/</robotNamespace>
-        <!-- 提高控制频率，降低周期值 -->
-        <controlPeriod>0.0025</controlPeriod>  <!-- 1/400秒 = 0.0025秒 -->
+        <controlPeriod>0.0025</controlPeriod>  
       </plugin>
       
       <!-- 提高joint_state_publisher更新频率到400Hz --> <!--将指定的joints发布为/joint_states的话题-->
       <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
         <jointName>velodyne_spin_joint</jointName> 
-        <updateRate>400</updateRate>  <!-- 从50Hz提高到400Hz -->
+        <updateRate>400</updateRate>  
       </plugin>
     </gazebo>
     
@@ -241,13 +252,5 @@
       <implicitSpringDamper>1</implicitSpringDamper>
     </gazebo>
 
-    <!-- 优化Gazebo物理属性 -->
-    <!-- <gazebo>
-      <physics type="ode">
-        <max_step_size>0.001</max_step_size> 
-        <real_time_factor>1.0</real_time_factor>
-        <real_time_update_rate>1000</real_time_update_rate> 
-      </physics>
-    </gazebo> -->
 
 </robot>

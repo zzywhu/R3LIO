@@ -10,5 +10,6 @@
         "/home/zzy/ros_driver/devel/lib/python3/dist-packages",
         "/home/zzy/SLAM/MRI-MMS/devel/lib/python3/dist-packages",
         "/opt/ros/noetic/lib/python3/dist-packages"
-    ]
+    ],
+    "ros.distro": "noetic"
 }

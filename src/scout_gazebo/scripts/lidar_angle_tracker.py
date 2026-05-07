@@ -3,10 +3,13 @@
 
 import rospy
 import math
-from sensor_msgs.msg import JointState
+import os
+import time
+from sensor_msgs.msg import JointState, Imu, PointCloud2
 import tf
 import tf.transformations as tft
 from scout_gazebo.msg import LidarAngle  # 导入自定义消息
+import rosbag  # 导入rosbag库用于录制数据
 
 class LidarAngleTracker:
     def __init__(self):
@@ -58,14 +61,14 @@ class LidarAngleTracker:
             
             # 发布相对角度信息
             angle_msg = JointState()
-            angle_msg.header.stamp = rospy.Time.now()
+            angle_msg.header.stamp = msg.header.stamp
             angle_msg.name = ['velodyne_relative_angle']
             angle_msg.position = [self.normalized_angle]
             self.angle_pub.publish(angle_msg)
 
             # 发布自定义消息
             lidar_angle_msg = LidarAngle()
-            lidar_angle_msg.header.stamp = rospy.Time.now()
+            lidar_angle_msg.header.stamp = msg.header.stamp
             lidar_angle_msg.angle = self.relative_angle_deg
             self.lidar_angle_pub.publish(lidar_angle_msg)
     
@@ -84,8 +87,9 @@ class LidarAngleTracker:
             else:
                 self.print_counter = 0
                 
-            if self.print_counter % 10 == 0:
+            if self.print_counter % 400 == 0:
                 # 显示角度信息
+                rospy.loginfo("旋转时间: %.2f秒", rospy.get_time())
                 rospy.loginfo("当前角度: %.2f弧度, 初始角度: %.2f弧度", 
                              self.current_angle, self.initial_angle)
                 rospy.loginfo("相对角度: %.2f弧度 (%.2f度)", 

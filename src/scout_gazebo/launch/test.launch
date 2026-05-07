@@ -1,4 +1,6 @@
 <launch>
+    <!-- 启动雷达角度跟踪器节点 -->
+    <node name="lidar_angle_tracker" pkg="scout_gazebo" type="lidar_angle_tracker.py" output="screen" />
     <arg name = "model_xacro" default = "$(find scout_gazebo)/urdf/base.xacro" />
     <!-- 将 Urdf 文件的内容加载到参数服务器 -->
     <param name="robot_description" command="$(find xacro)/xacro $(arg model_xacro)" />
@@ -11,7 +13,8 @@
     
     <!-- 在 gazebo 中启动一个环境 -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch"> 
-        <arg name="world_name" value="$(find scout_gazebo)/worlds/office.world" /> 
+        <!-- <arg name="world_name" value="$(find gazebo_cave_world)/worlds/cave_world.world"/> -->
+        <arg name="world_name" value="$(find scout_gazebo)/worlds/lab.world"/>
         <arg name="paused" value="false"/>
         <arg name="use_sim_time" value="true"/>
         <arg name="gui" value="true"/>
@@ -20,15 +23,23 @@
     </include>
     
     <!-- 在 gazebo 中加载机器人模型  -->
-    <node pkg="gazebo_ros" type="spawn_model" name="model" args="-urdf -model scout -param robot_description"  />  
+  <node pkg="gazebo_ros" type="spawn_model" name="model"
+      args="-urdf -model scout -param robot_description -x -1.8 -y 1.26 -z 0.28 -Y 3.14" />
 
     <!-- 加载velodyne控制器参数 -->
-    <!-- <rosparam file="$(find scout_gazebo)/config/velodyne_controller.yaml" command="load" /> -->
+    <rosparam file="$(find scout_gazebo)/config/velodyne_controller.yaml" command="load" />
 
     <!-- 启动controller_manager -->
-    <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
           output="screen"
-          args="velodyne_spin_joint_velocity_controller" /> -->
-    <!-- 开机默认转速 1 rad/s -->
-    <!-- <node name="velodyne_default_speed" pkg="rostopic" type="rostopic" args="pub -r 10 /velodyne_spin_joint_velocity_controller/command std_msgs/Float64 '1.0'"/> -->
+          args="velodyne_spin_joint_velocity_controller" />
+    <!-- 开机默认转速设为0，使雷达静止不动 -->
+    <node name="velodyne_default_speed" pkg="rostopic" type="rostopic" args="pub -r 10 /velodyne_spin_joint_velocity_controller/command std_msgs/Float64 '1.57'"/>
+
+    <!-- 可选：启动 rqt_plot 实时显示雷达角度（度） -->
+    <arg name="use_rqt_plot" default="true" />
+    <node if="$(arg use_rqt_plot)" name="lidar_angle_plot" pkg="rqt_plot" type="rqt_plot" output="screen"
+          args="/velodyne_angle_deg/angle" />
 </launch>
+
+

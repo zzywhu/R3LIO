@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>gazebo_cave_world</name>
+  <version>1.0.0</version>
+  <description>Cave environment is made by using both DARPA provided tiles and custom made 3D models</description>
+
+  <!-- One maintainer tag required, multiple allowed, one person per tag -->
+  <maintainer email="koval.anton@gmail.com">Anton Koval</maintainer>
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <license>MIT</license>
+  
+  <url type="website">https://github.com/LTU-CEG/gazebo_cave_world</url>
+  <url type="bugtracker">https://github.com/LTU-CEG/gazebo_cave_world/issues</url>
+
+  <author email="koval.anton@gmail.com">Anton Koval</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>gazebo</depend>
+  <depend>gazebo_plugins</depend>
+  <depend>gazebo_ros</depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+    <gazebo_ros gazebo_model_path="${prefix}/worlds/models"/>
+  </export>
+</package>

@@ -45,6 +45,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
                 <geometry>
                     <cylinder length="${wheel_length}" radius="${wheel_radius}" />
                 </geometry>
+                <surface>
+                  <friction>
+                    <ode>
+                      <mu>1.0</mu>
+                      <mu2>1.0</mu2>
+                    </ode>
+                  </friction>
+                </surface>
             </collision>
         </link>
 
