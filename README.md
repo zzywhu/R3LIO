@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>R$^{3}$LIO: Robust Reflectivity-Assisted Rotating LiDAR-Inertial
+  <h1>R³LIO: Robust Reflectivity-Assisted Rotating LiDAR-Inertial
   Odometry for Degenerate and Unstructured Environments</h1>
   <p><strong><i>ISPRS JPRS (2026, major revision)</i></strong></p>
   <br>
@@ -17,7 +17,7 @@
 
 <br>
 
-Official implementation of **R$^{3}$LIO**, a robust and accurate mobile mapping system built upon an iterative error-state Kalman filter (IESKF), targeting a low-cost rotating LiDAR setup (a 16-channel LiDAR actuated by a motor to continuously scan a full FoV).
+Official implementation of **R³LIO**, a robust and accurate mobile mapping system built upon an iterative error-state Kalman filter (IESKF), targeting a low-cost rotating LiDAR setup (a 16-channel LiDAR actuated by a motor to continuously scan a full FoV).
 
 ## Quick Start
 
