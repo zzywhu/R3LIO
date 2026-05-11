@@ -38,3 +38,6 @@ If you find this project useful, please consider citing our paper:
   doi={10.1109/TIM.2026.3687975}
 }
 ``` -->
+
+## Acknowledgments
+Thank the authors of [FAST-LIO2](https://github.com/hku-mars/BEV_LIO) and [Scout Gazebo](https://github.com/ADDA-acx/scout_gazebo.git) for open-sourcing their outstanding works.
