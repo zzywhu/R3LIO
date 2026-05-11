@@ -21,6 +21,28 @@ Official implementation of **R³LIO**, a robust and accurate mobile mapping syst
 
 ## Quick Start
 
+### Real Robot
+
+Launch the real-robot pipeline with:
+
+```bash
+roslaunch rigelslam_rot run.launch
+```
+
+### Simulation
+
+1. Start the simulation environment:
+
+```bash
+roslaunch scout_gazebo test.launch
+```
+
+2. Start the simulated odometry:
+
+```bash
+roslaunch rigelslam_rot run_sim.launch
+```
+
 
 ## Citation
 
