@@ -1407,6 +1407,21 @@ void loadRosParams(ros::NodeHandle &nh) {
   nh.param<bool>("rigelslam_rot/loopClosureEnableFlag", _sys->_config._isLoopEn,
                  false);
   nh.param<bool>("rigelslam_rot/saveMap", _sys->_config._issavemap, false);
+  nh.param<bool>("rigelslam_rot/extrinsicEstimationEn",
+                 _sys->_config._isEstiExtrinsic, true);
+  nh.param<bool>("rigelslam_rot/observabilityMetricsEn",
+                 _sys->_config._obsAnalysisEn, true);
+  nh.param<bool>("rigelslam_rot/observabilityMetricsWhiten",
+                 _sys->_config._obsAnalysisWhiten, true);
+  nh.param<int>("rigelslam_rot/observabilityMetricsWindowSize",
+                _sys->_config._obsAnalysisWindowSize, 20);
+  nh.param<double>("rigelslam_rot/observabilityMetricsRankRatio",
+                   _sys->_config._obsAnalysisRankRatio, 1e-3);
+  std::string obsMetricsDir = std::string(ROOT_DIR) + "observability_experiments";
+  nh.param<std::string>("rigelslam_rot/observabilityMetricsDir", obsMetricsDir,
+                        obsMetricsDir);
+  _sys->_config._obsAnalysisOutputPath =
+      obsMetricsDir + "/extrinsic_observability.csv";
   LoopCloser::mutableConfig()._issavemap = _sys->_config._issavemap;
   nh.param<bool>("rigelslam_rot/loopcorrect",
                  LoopCloser::mutableConfig()._isCorrectRealTime, false);

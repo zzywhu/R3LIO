@@ -160,6 +160,11 @@ class SYSTEM_API System {
     double _rangingCov;
     double _angleCov;
     int _covType;
+    bool _obsAnalysisEn;
+    bool _obsAnalysisWhiten;
+    int _obsAnalysisWindowSize;
+    double _obsAnalysisRankRatio;
+    std::string _obsAnalysisOutputPath;
 
     // BundleAdjustment:
     bool _isEnableBA;
@@ -234,6 +239,11 @@ class SYSTEM_API System {
       _rangingCov = 0.02;
       _angleCov = 0.05;
       _covType = 0;  // 0: observation,  1: vgicp
+      _obsAnalysisEn = false;
+      _obsAnalysisWhiten = true;
+      _obsAnalysisWindowSize = 20;
+      _obsAnalysisRankRatio = 1e-3;
+      _obsAnalysisOutputPath = "";
 
       _isEnableBA = false;
       _isVerbose = false;
@@ -354,6 +364,7 @@ class SYSTEM_API System {
 
     _fTimeOfs = std::ofstream(string(ROOT_DIR) + "result/timeCost.txt",
                               std::ios::trunc | std::ios::in);
+    _hasObsJacobian = false;
   }
 
   ~System() {
@@ -589,6 +600,14 @@ class SYSTEM_API System {
 
   void hShareModelVoxelMap(state_ikfom &s,
                            esekfom::dyn_share_datastruct<double> &ekfom_data);
+
+  void cacheObservabilityJacobians(
+      const Eigen::MatrixXd &h_x, const Eigen::MatrixXd &R,
+      const std::string &model_name, double timestamp);
+
+  void flushObservabilityAnalysis(double timestamp);
+
+  void resetObservabilityAnalysis();
 
   bool updateKFVoxelMap();
 
@@ -901,6 +920,13 @@ class SYSTEM_API System {
   ZGAxisTransfer *_cloudAxisTransfer;
 
   std::ofstream _fTimeOfs;
+  std::ofstream _fObsAnalysis;
+  bool _hasObsJacobian;
+  Eigen::MatrixXd _lastObsH;
+  Eigen::VectorXd _lastObsR;
+  std::string _lastObsModelName;
+  std::deque<Eigen::MatrixXd> _obsHWindow;
+  std::deque<Eigen::VectorXd> _obsRWindow;
   bool _isGnssInited;
   Eigen::Matrix4d _gnssTrans;
   std::vector<Eigen::Matrix4d> _TilList;

@@ -9,6 +9,195 @@
 
 System::Config System::_config;
 
+namespace {
+
+Eigen::MatrixXd BuildObservabilityStack(
+    const std::deque<Eigen::MatrixXd> &h_window,
+    const std::deque<Eigen::VectorXd> &r_window, bool whiten) {
+  if (h_window.empty()) return Eigen::MatrixXd();
+
+  int total_rows = 0;
+  const int cols = h_window.front().cols();
+  for (const auto &block : h_window) total_rows += block.rows();
+
+  Eigen::MatrixXd stacked(total_rows, cols);
+  int row_offset = 0;
+  for (size_t block_id = 0; block_id < h_window.size(); ++block_id) {
+    const auto &block = h_window[block_id];
+    stacked.middleRows(row_offset, block.rows()) = block;
+    if (whiten && block_id < r_window.size() &&
+        r_window[block_id].size() == block.rows()) {
+      for (int i = 0; i < block.rows(); ++i) {
+        const double sigma = std::sqrt(std::max(1e-12, r_window[block_id](i)));
+        stacked.row(row_offset + i) /= sigma;
+      }
+    }
+    row_offset += block.rows();
+  }
+  return stacked;
+}
+
+Eigen::VectorXd ComputeSingularValues(const Eigen::MatrixXd &mat) {
+  if (mat.rows() == 0 || mat.cols() == 0) return Eigen::VectorXd();
+  Eigen::JacobiSVD<Eigen::MatrixXd> svd(mat, Eigen::ComputeThinU |
+                                                 Eigen::ComputeThinV);
+  return svd.singularValues();
+}
+
+int ComputeNumericalRank(const Eigen::VectorXd &singular_values,
+                         double ratio_threshold) {
+  if (singular_values.size() == 0) return 0;
+  const double threshold =
+      std::max(1e-12, ratio_threshold * singular_values(0));
+  int rank = 0;
+  for (int i = 0; i < singular_values.size(); ++i) {
+    if (singular_values(i) > threshold) ++rank;
+  }
+  return rank;
+}
+
+void AppendSingularValues(std::ofstream &ofs, const Eigen::VectorXd &values,
+                          int expected_size) {
+  for (int i = 0; i < expected_size; ++i) {
+    ofs << ",";
+    if (i < values.size())
+      ofs << values(i);
+    else
+      ofs << 0.0;
+  }
+}
+
+}  // namespace
+
+void System::cacheObservabilityJacobians(const Eigen::MatrixXd &h_x,
+                                         const Eigen::MatrixXd &R,
+                                         const std::string &model_name,
+                                         double timestamp) {
+  (void)timestamp;
+  if (!_config._obsAnalysisEn || !_config._isEstiExtrinsic) return;
+  if (h_x.rows() == 0 || h_x.cols() < 12) return;
+
+  _lastObsH = h_x.block(0, 6, h_x.rows(), 6);
+  _lastObsR.resize(h_x.rows());
+  for (int i = 0; i < h_x.rows(); ++i) {
+    const double variance =
+        (R.rows() == h_x.rows() && R.cols() > 0) ? R(i, 0) : 1.0;
+    _lastObsR(i) = std::max(1e-12, variance);
+  }
+  _lastObsModelName = model_name;
+  _hasObsJacobian = true;
+}
+
+void System::flushObservabilityAnalysis(double timestamp) {
+  if (!_config._obsAnalysisEn || !_config._isEstiExtrinsic || !_hasObsJacobian)
+    return;
+
+  if (!_fObsAnalysis.is_open()) {
+    std::string output_path = _config._obsAnalysisOutputPath.empty()
+                                  ? std::string(ROOT_DIR) +
+                                        "observability_experiments/"
+                                        "extrinsic_observability.csv"
+                                  : _config._obsAnalysisOutputPath;
+    std::error_code ec;
+    std::filesystem::path output_dir =
+        std::filesystem::path(output_path).parent_path();
+    if (!output_dir.empty()) {
+      std::filesystem::create_directories(output_dir, ec);
+    }
+    _fObsAnalysis.open(output_path, std::ios::out | std::ios::trunc);
+    if (_fObsAnalysis.is_open()) {
+      _fObsAnalysis
+          << "timestamp,frame_id,model,window_frames,window_rows,last_rows";
+      for (int i = 0; i < 6; ++i) _fObsAnalysis << ",sigma_combined_raw_" << i;
+      _fObsAnalysis << ",rank_combined_raw";
+      for (int i = 0; i < 3; ++i) _fObsAnalysis << ",sigma_rot_raw_" << i;
+      _fObsAnalysis << ",rank_rot_raw";
+      for (int i = 0; i < 3; ++i) _fObsAnalysis << ",sigma_trans_raw_" << i;
+      _fObsAnalysis << ",rank_trans_raw";
+      for (int i = 0; i < 6; ++i) _fObsAnalysis << ",sigma_combined_w_" << i;
+      _fObsAnalysis << ",rank_combined_w";
+      for (int i = 0; i < 3; ++i) _fObsAnalysis << ",sigma_rot_w_" << i;
+      _fObsAnalysis << ",rank_rot_w";
+      for (int i = 0; i < 3; ++i) _fObsAnalysis << ",sigma_trans_w_" << i;
+      _fObsAnalysis << ",rank_trans_w\n";
+    }
+  }
+
+  _obsHWindow.push_back(_lastObsH);
+  _obsRWindow.push_back(_lastObsR);
+  const size_t max_window = static_cast<size_t>(
+      std::max(1, _config._obsAnalysisWindowSize));
+  while (_obsHWindow.size() > max_window) {
+    _obsHWindow.pop_front();
+    _obsRWindow.pop_front();
+  }
+
+  if (!_fObsAnalysis.is_open()) {
+    _hasObsJacobian = false;
+    return;
+  }
+
+  const Eigen::MatrixXd raw_stack =
+      BuildObservabilityStack(_obsHWindow, _obsRWindow, false);
+  const Eigen::MatrixXd weighted_stack =
+      BuildObservabilityStack(_obsHWindow, _obsRWindow, true);
+  const int rot_cols = std::min(3, static_cast<int>(raw_stack.cols()));
+  const int trans_cols = std::min(3, static_cast<int>(raw_stack.cols()));
+
+  const Eigen::VectorXd sv_combined_raw = ComputeSingularValues(raw_stack);
+  const Eigen::VectorXd sv_rot_raw = ComputeSingularValues(
+      raw_stack.leftCols(rot_cols));
+  const Eigen::VectorXd sv_trans_raw = ComputeSingularValues(
+      raw_stack.rightCols(trans_cols));
+  const Eigen::VectorXd sv_combined_w = ComputeSingularValues(weighted_stack);
+  const Eigen::VectorXd sv_rot_w = ComputeSingularValues(
+      weighted_stack.leftCols(rot_cols));
+  const Eigen::VectorXd sv_trans_w = ComputeSingularValues(
+      weighted_stack.rightCols(trans_cols));
+
+  _fObsAnalysis << std::fixed << std::setprecision(9) << timestamp << ","
+                << _frameId << "," << _lastObsModelName << ","
+                << _obsHWindow.size() << "," << raw_stack.rows() << ","
+                << _lastObsH.rows();
+  AppendSingularValues(_fObsAnalysis, sv_combined_raw, 6);
+  _fObsAnalysis << ","
+                << ComputeNumericalRank(sv_combined_raw,
+                                        _config._obsAnalysisRankRatio);
+  AppendSingularValues(_fObsAnalysis, sv_rot_raw, 3);
+  _fObsAnalysis << ","
+                << ComputeNumericalRank(sv_rot_raw,
+                                        _config._obsAnalysisRankRatio);
+  AppendSingularValues(_fObsAnalysis, sv_trans_raw, 3);
+  _fObsAnalysis << ","
+                << ComputeNumericalRank(sv_trans_raw,
+                                        _config._obsAnalysisRankRatio);
+  AppendSingularValues(_fObsAnalysis, sv_combined_w, 6);
+  _fObsAnalysis << ","
+                << ComputeNumericalRank(sv_combined_w,
+                                        _config._obsAnalysisRankRatio);
+  AppendSingularValues(_fObsAnalysis, sv_rot_w, 3);
+  _fObsAnalysis << ","
+                << ComputeNumericalRank(sv_rot_w,
+                                        _config._obsAnalysisRankRatio);
+  AppendSingularValues(_fObsAnalysis, sv_trans_w, 3);
+  _fObsAnalysis << ","
+                << ComputeNumericalRank(sv_trans_w,
+                                        _config._obsAnalysisRankRatio)
+                << "\n";
+  _fObsAnalysis.flush();
+  _hasObsJacobian = false;
+}
+
+void System::resetObservabilityAnalysis() {
+  _hasObsJacobian = false;
+  _lastObsH.resize(0, 0);
+  _lastObsR.resize(0);
+  _lastObsModelName.clear();
+  _obsHWindow.clear();
+  _obsRWindow.clear();
+  if (_fObsAnalysis.is_open()) _fObsAnalysis.close();
+}
+
 void System::laserMapFovSegment() {
   _cubNeedrm.clear();
   V3D posLid = _stateIkfom.pos +
@@ -1879,6 +2068,20 @@ void System::loadParams(const std::string &filePath) {
   _config._rangingCov = mapping["ranging_cov"].as<double>();
   _config._angleCov = mapping["angle_cov"].as<double>();
   _config._covType = mapping["covariance_type"].as<int>();
+  const YAML::Node obs_analysis = mapping["observability_analysis"];
+  if (obs_analysis) {
+    if (obs_analysis["enable"])
+      _config._obsAnalysisEn = obs_analysis["enable"].as<bool>();
+    if (obs_analysis["whiten"])
+      _config._obsAnalysisWhiten = obs_analysis["whiten"].as<bool>();
+    if (obs_analysis["window_size"])
+      _config._obsAnalysisWindowSize = obs_analysis["window_size"].as<int>();
+    if (obs_analysis["rank_ratio"])
+      _config._obsAnalysisRankRatio = obs_analysis["rank_ratio"].as<double>();
+    if (obs_analysis["output_path"])
+      _config._obsAnalysisOutputPath =
+          obs_analysis["output_path"].as<std::string>();
+  }
 
   const YAML::Node &BundleAdjustment = node["BundleAdjustment"];
   _config._isEnableBA = BundleAdjustment["is_enable_BA"].as<bool>();
@@ -1953,6 +2156,7 @@ void System::loadParams(const std::string &filePath) {
 }
 
 bool System::initSystem() {
+  resetObservabilityAnalysis();
   _imgProcesser.startThread();
   std::cout << "imgprocesser started!" << std::endl;
 
@@ -2122,6 +2326,7 @@ bool System::initSystem() {
 }
 
 void System::resetSystem() {
+  resetObservabilityAnalysis();
   System::mutableConfig()._isMotorInitialized = true;
   System::mutableConfig()._isSaveMap = true;
   _frameId = 0;

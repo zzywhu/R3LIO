@@ -19,6 +19,12 @@ rigelslam_rot:
   ridus_k: 3.0
   cov_type: 1
   updatemethod: 0 #0:Ikfom 1:LSQ with IMU
+  extrinsicEstimationEn: true
+  observabilityMetricsEn: true
+  observabilityMetricsWhiten: true
+  observabilityMetricsWindowSize: 20
+  observabilityMetricsRankRatio: 0.001
+  observabilityMetricsDir: /home/zzy/SLAM/R3LIO/src/Rot_SLAM/observability_experiments
   saveMap: true
   GravityAlign: false
   usemutiview: true

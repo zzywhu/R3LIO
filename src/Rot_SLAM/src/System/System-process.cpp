@@ -1046,6 +1046,7 @@ void System::processCloudIKFoM() {
 
   _kf.update_iterated_dyn_share_modified(0.001, solveTime);
   _stateIkfom = _kf.get_x();
+  flushObservabilityAnalysis(_measures.lidar_end_time);
 
   _Rwl = _stateIkfom.rot.matrix() * _stateIkfom.offset_R_L_I;
   _twl = _stateIkfom.rot.matrix() * _stateIkfom.offset_T_L_I + _stateIkfom.pos;
@@ -1277,6 +1278,7 @@ void System::processCloudIKFoM_calib() {
 
   _kf.update_iterated_dyn_share_modified(0.001, solveTime);
   _stateIkfom = _kf.get_x();
+  flushObservabilityAnalysis(_measures.lidar_end_time);
 
   _Rwl = _stateIkfom.rot.matrix() * _stateIkfom.offset_R_L_I;
   _twl = _stateIkfom.rot.matrix() * _stateIkfom.offset_T_L_I + _stateIkfom.pos;
@@ -1462,6 +1464,8 @@ void System::hShareModelKdTree(
     ekfom_data.R(i) = 0.001;
   }
   //    std::cout<<std::setprecision(16)<<std::fixed<<ekfom_data.h_x<<std::endl;
+  cacheObservabilityJacobians(ekfom_data.h_x, ekfom_data.R, "kdtree",
+                              _measures.lidar_end_time);
 }
 
 void System::hShareModelVoxelMap(
@@ -1667,6 +1671,8 @@ void System::hShareModelVoxelMap(
   // double meanResidual = totalResidual / (matchSurfSize+matchlinesize);
   // std::cout<<"Matched feat num:" << matchSurfSize<<"+"<<matchlinesize<<
   // std::endl; std::cout<<"Mean Residual:" << meanResidual << std::endl;
+  cacheObservabilityJacobians(ekfom_data.h_x, ekfom_data.R, "voxelmap",
+                              _measures.lidar_end_time);
 }
 
 bool System::updateKFVoxelMap() {
