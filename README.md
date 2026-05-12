@@ -48,8 +48,8 @@ Test on self-recorded sequences:
     <td align="center"><img src="src/Rot_SLAM/demo/robust/space.gif" alt="Space" width="400"></td>
   </tr>
   <tr>
-    <td align="center" width="50%"><strong><em>“OpenSpace“</em> sequence<strong></td>
     <td align="center" width="50%"><strong><em>“CampusLoop“</em> sequence<strong></td>
+    <td align="center" width="50%"><strong><em>“Curved Tunnel“</em> sequence<strong></td>
   </tr>
   <tr>
     <td align="center"><img src="src/Rot_SLAM/demo/robust/street.gif" alt="Street" width="400"></td>
