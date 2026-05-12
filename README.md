@@ -29,6 +29,21 @@ Launch the real-robot pipeline with:
 roslaunch rigelslam_rot run.launch
 ```
 
+Test on self-recorded sequences:
+
+<div align="center">
+  <img src="src/Rot_SLAM/demo/robust/building.gif" alt="building" width="32%">
+  <img src="src/Rot_SLAM/demo/robust/park.gif" alt="park" width="32%">
+  <img src="src/Rot_SLAM/demo/robust/parkinglot.gif" alt="parkinglot" width="32%">
+</div>
+
+<div align="center">
+  <img src="src/Rot_SLAM/demo/robust/space.gif" alt="space" width="32%">
+  <img src="src/Rot_SLAM/demo/robust/street.gif" alt="street" width="32%">
+  <img src="src/Rot_SLAM/demo/robust/tunnel.gif" alt="tunnel" width="32%">
+</div>
+
+
 ### Simulation
 
 1. Start the simulation environment:
