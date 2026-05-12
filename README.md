@@ -31,17 +31,28 @@ roslaunch rigelslam_rot run.launch
 
 Test on self-recorded sequences:
 
-<div align="center">
-  <img src="src/Rot_SLAM/demo/robust/building.gif" alt="building" width="32%">
-  <img src="src/Rot_SLAM/demo/robust/park.gif" alt="park" width="32%">
-  <img src="src/Rot_SLAM/demo/robust/parkinglot.gif" alt="parkinglot" width="32%">
-</div>
-
-<div align="center">
-  <img src="src/Rot_SLAM/demo/robust/space.gif" alt="space" width="32%">
-  <img src="src/Rot_SLAM/demo/robust/street.gif" alt="street" width="32%">
-  <img src="src/Rot_SLAM/demo/robust/tunnel.gif" alt="tunnel" width="32%">
-</div>
+<table align="center">
+  <tr>
+    <td align="center"><strong>Building</strong></td>
+    <td align="center"><strong>Park</strong></td>
+    <td align="center"><strong>Parking Lot</strong></td>
+  </tr>
+  <tr>
+    <td><img src="src/Rot_SLAM/demo/robust/building.gif" alt="Building" width="320"></td>
+    <td><img src="src/Rot_SLAM/demo/robust/park.gif" alt="Park" width="320"></td>
+    <td><img src="src/Rot_SLAM/demo/robust/parkinglot.gif" alt="Parking Lot" width="320"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Space</strong></td>
+    <td align="center"><strong>Street</strong></td>
+    <td align="center"><strong>Tunnel</strong></td>
+  </tr>
+  <tr>
+    <td><img src="src/Rot_SLAM/demo/robust/space.gif" alt="Space" width="320"></td>
+    <td><img src="src/Rot_SLAM/demo/robust/street.gif" alt="Street" width="320"></td>
+    <td><img src="src/Rot_SLAM/demo/robust/tunnel.gif" alt="Tunnel" width="320"></td>
+  </tr>
+</table>
 
 
 ### Simulation
