@@ -1,6 +1,6 @@
 <div align="center">
   <h1>R³LIO: Robust Reflectivity-Assisted Rotating LiDAR-Inertial
-  Odometry for Degenerate and Unstructured Environments</h1>
+  Odometry for Degenerate Environments</h1>
   <p><strong><i>ISPRS JPRS (2026, major revision)</i></strong></p>
   <br>
 
@@ -94,7 +94,13 @@ The dataset release is currently being organized and will be available soon.
 
 ## Device Design
 
-The hardware design documentation is currently being organized and will be released soon.
+A rough structural design of the device is shown below.
+
+<div align="center">
+  <img src="src/Rot_SLAM/demo/device/structure.png" alt="Device structure" width="720">
+</div>
+
+The detailed SolidWorks design files are currently being organized and will be released soon.
 
 
 ## Citation
