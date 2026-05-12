@@ -31,28 +31,38 @@ roslaunch rigelslam_rot run.launch
 
 Test on self-recorded sequences:
 
-<table align="center">
-  <tr>
-    <td align="center"><strong>Building</strong></td>
-    <td align="center"><strong>Park</strong></td>
-    <td align="center"><strong>Parking Lot</strong></td>
-  </tr>
-  <tr>
-    <td><img src="src/Rot_SLAM/demo/robust/building.gif" alt="Building" width="320"></td>
-    <td><img src="src/Rot_SLAM/demo/robust/park.gif" alt="Park" width="320"></td>
-    <td><img src="src/Rot_SLAM/demo/robust/parkinglot.gif" alt="Parking Lot" width="320"></td>
-  </tr>
-  <tr>
-    <td align="center"><strong>Space</strong></td>
-    <td align="center"><strong>Street</strong></td>
-    <td align="center"><strong>Tunnel</strong></td>
-  </tr>
-  <tr>
-    <td><img src="src/Rot_SLAM/demo/robust/space.gif" alt="Space" width="320"></td>
-    <td><img src="src/Rot_SLAM/demo/robust/street.gif" alt="Street" width="320"></td>
-    <td><img src="src/Rot_SLAM/demo/robust/tunnel.gif" alt="Tunnel" width="320"></td>
-  </tr>
-</table>
+<div align="center">
+  <div style="display:inline-block; width:46%; margin:1% 1%; vertical-align:top; text-align:center;">
+    <strong>Building</strong><br>
+    <img src="src/Rot_SLAM/demo/robust/building.gif" alt="Building" width="100%">
+  </div>
+  <div style="display:inline-block; width:46%; margin:1% 1%; vertical-align:top; text-align:center;">
+    <strong>Park</strong><br>
+    <img src="src/Rot_SLAM/demo/robust/park.gif" alt="Park" width="100%">
+  </div>
+</div>
+
+<div align="center">
+  <div style="display:inline-block; width:46%; margin:1% 1%; vertical-align:top; text-align:center;">
+    <strong>Parking Lot</strong><br>
+    <img src="src/Rot_SLAM/demo/robust/parkinglot.gif" alt="Parking Lot" width="100%">
+  </div>
+  <div style="display:inline-block; width:46%; margin:1% 1%; vertical-align:top; text-align:center;">
+    <strong>Space</strong><br>
+    <img src="src/Rot_SLAM/demo/robust/space.gif" alt="Space" width="100%">
+  </div>
+</div>
+
+<div align="center">
+  <div style="display:inline-block; width:46%; margin:1% 1%; vertical-align:top; text-align:center;">
+    <strong>Street</strong><br>
+    <img src="src/Rot_SLAM/demo/robust/street.gif" alt="Street" width="100%">
+  </div>
+  <div style="display:inline-block; width:46%; margin:1% 1%; vertical-align:top; text-align:center;">
+    <strong>Tunnel</strong><br>
+    <img src="src/Rot_SLAM/demo/robust/tunnel.gif" alt="Tunnel" width="100%">
+  </div>
+</div>
 
 
 ### Simulation
