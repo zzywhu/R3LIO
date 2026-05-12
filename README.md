@@ -32,7 +32,7 @@ Test on self-recorded sequences:
 
 <table align="center">
   <tr>
-    <td align="center" width="50%"><em>Building</em> sequence</td>
+    <td align="center" width="50%"><strong><em>Building</em> sequence<strong></td>
     <td align="center" width="50%"><em>Park<em></td>
   </tr>
   <tr>
