@@ -97,7 +97,7 @@ The dataset release is currently being organized and will be available soon.
 A rough structural design of the device is shown below.
 
 <div align="center">
-  <img src="src/Rot_SLAM/demo/device/structure.png" alt="Device structure" width="720">
+  <img src="src/Rot_SLAM/demo/device/structure.png" alt="Device structure" width="500">
 </div>
 
 The detailed SolidWorks design files are currently being organized and will be released soon.
