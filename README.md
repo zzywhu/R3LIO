@@ -85,6 +85,17 @@ Test on simulation sequence:
   </tr>
 </table>
 
+## Dataset
+
+The dataset release is currently being organized and will be available soon.
+
+- **Self-recorded sequences**: coming soon
+- **Simulation sequences**: coming soon
+
+## Device Design
+
+The hardware design documentation is currently being organized and will be released soon.
+
 
 ## Citation
 
