@@ -32,24 +32,24 @@ Test on self-recorded sequences:
 
 <table align="center">
   <tr>
-    <td align="center" width="50%"><strong><em>Building</em> sequence<strong></td>
-    <td align="center" width="50%"><em>Park<em></td>
+    <td align="center" width="50%"><strong><em>“Building“</em> sequence<strong></td>
+    <td align="center" width="50%"><strong><em>“IndustrialPark“</em> sequence<strong></td>
   </tr>
   <tr>
     <td align="center"><img src="src/Rot_SLAM/demo/robust/building.gif" alt="Building" width="400"></td>
     <td align="center"><img src="src/Rot_SLAM/demo/robust/park.gif" alt="Park" width="400"></td>
   </tr>
   <tr>
-    <td align="center" width="50%"><em>Parking Lot<em></td>
-    <td align="center" width="50%"><em>Space<em></td>
+    <td align="center" width="50%"><strong><em>“ParkingLot“</em> sequence<strong></td>
+    <td align="center" width="50%"><strong><em>“OpenSpace“</em> sequence<strong></td>
   </tr>
   <tr>
     <td align="center"><img src="src/Rot_SLAM/demo/robust/parkinglot.gif" alt="Parking Lot" width="400"></td>
     <td align="center"><img src="src/Rot_SLAM/demo/robust/space.gif" alt="Space" width="400"></td>
   </tr>
   <tr>
-    <td align="center" width="50%"><em>Street<em></td>
-    <td align="center" width="50%"><em>Tunnel<em></td>
+    <td align="center" width="50%"><strong><em>“OpenSpace“</em> sequence<strong></td>
+    <td align="center" width="50%"><strong><em>“CampusLoop“</em> sequence<strong></td>
   </tr>
   <tr>
     <td align="center"><img src="src/Rot_SLAM/demo/robust/street.gif" alt="Street" width="400"></td>
