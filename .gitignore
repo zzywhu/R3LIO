@@ -42,7 +42,8 @@ qtcreator-*
 /planning/docs
 /planning/src
 
-
+.vscode/*
+.catkin_workspace
 
 *~
 
