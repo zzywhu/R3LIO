@@ -36,24 +36,24 @@ Test on self-recorded sequences:
     <td align="center" width="50%"><strong><em>“IndustrialPark“</em> sequence<strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/building.gif" alt="Building" width="400"></td>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/park.gif" alt="Park" width="400"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/building.gif" alt="Building" width="380"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/park.gif" alt="Park" width="380"></td>
   </tr>
   <tr>
     <td align="center" width="50%"><strong><em>“ParkingLot“</em> sequence<strong></td>
     <td align="center" width="50%"><strong><em>“OpenSpace“</em> sequence<strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/parkinglot.gif" alt="Parking Lot" width="400"></td>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/space.gif" alt="Space" width="400"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/parkinglot.gif" alt="Parking Lot" width="380"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/space.gif" alt="Space" width="380"></td>
   </tr>
   <tr>
     <td align="center" width="50%"><strong><em>“CampusLoop“</em> sequence<strong></td>
     <td align="center" width="50%"><strong><em>“Curved Tunnel“</em> sequence<strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/street.gif" alt="Street" width="400"></td>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/tunnel.gif" alt="Tunnel" width="400"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/street.gif" alt="Street" width="380"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/tunnel.gif" alt="Tunnel" width="380"></td>
   </tr>
 </table>
 
@@ -80,8 +80,8 @@ Test on simulation sequence:
     <td align="center" width="50%"><strong><em>“SimSq1“</em> sequence<strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="src/Rot_SLAM/demo/simulation/gazebo.gif" alt="Building" width="400"></td>
-    <td align="center"><img src="src/Rot_SLAM/demo/simulation/sim.gif" alt="Park" width="400"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/simulation/gazebo.gif" alt="Building" width="380"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/simulation/sim.gif" alt="Park" width="380"></td>
   </tr>
 </table>
 
