@@ -72,6 +72,19 @@ roslaunch scout_gazebo test.launch
 roslaunch rigelslam_rot run_sim.launch
 ```
 
+Test on simulation sequence:
+
+<table align="center">
+  <tr>
+    <td align="center" width="50%"><strong>Gazebo simulation environment<strong></td>
+    <td align="center" width="50%"><strong><em>“SimSq1“</em> sequence<strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="src/Rot_SLAM/demo/simulation/gazebo.gif" alt="Building" width="400"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/simulation/sim.gif" alt="Park" width="400"></td>
+  </tr>
+</table>
+
 
 ## Citation
 
