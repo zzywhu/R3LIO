@@ -14,7 +14,6 @@
     <img src="https://img.shields.io/badge/DOI-10.1109%2FTIM.2026.3687975-blue" alt="DOI">
   </a> -->
 </div>
-
 <br>
 
 Official implementation of **R³LIO**, a robust and accurate mobile mapping system built upon an iterative error-state Kalman filter (IESKF), targeting a low-cost rotating LiDAR setup (a 16-channel LiDAR actuated by a motor to continuously scan a full FoV).
@@ -37,24 +36,24 @@ Test on self-recorded sequences:
     <td align="center" width="50%"><strong>Park</strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/building.gif" alt="Building" width="460"></td>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/park.gif" alt="Park" width="460"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/building.gif" alt="Building" width="400"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/park.gif" alt="Park" width="400"></td>
   </tr>
   <tr>
     <td align="center" width="50%"><strong>Parking Lot</strong></td>
     <td align="center" width="50%"><strong>Space</strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/parkinglot.gif" alt="Parking Lot" width="460"></td>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/space.gif" alt="Space" width="460"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/parkinglot.gif" alt="Parking Lot" width="400"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/space.gif" alt="Space" width="400"></td>
   </tr>
   <tr>
     <td align="center" width="50%"><strong>Street</strong></td>
     <td align="center" width="50%"><strong>Tunnel</strong></td>
   </tr>
   <tr>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/street.gif" alt="Street" width="460"></td>
-    <td align="center"><img src="src/Rot_SLAM/demo/robust/tunnel.gif" alt="Tunnel" width="460"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/street.gif" alt="Street" width="400"></td>
+    <td align="center"><img src="src/Rot_SLAM/demo/robust/tunnel.gif" alt="Tunnel" width="400"></td>
   </tr>
 </table>
 
