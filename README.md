@@ -20,9 +20,9 @@ Official implementation of **R³LIO**, a robust and accurate mobile mapping syst
 
 ## Quick Start
 
-### Real Robot
+### Real Robot (comming soon)
 
-Launch the real-robot pipeline with:
+<!-- Launch the real-robot pipeline with:
 
 ```bash
 roslaunch rigelslam_rot run.launch
@@ -55,7 +55,7 @@ Test on self-recorded sequences:
     <td align="center"><img src="src/Rot_SLAM/demo/robust/street.gif" alt="Street" width="380"></td>
     <td align="center"><img src="src/Rot_SLAM/demo/robust/tunnel.gif" alt="Tunnel" width="380"></td>
   </tr>
-</table>
+</table> -->
 
 
 ### Simulation
