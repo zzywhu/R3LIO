@@ -20,7 +20,7 @@ Official implementation of **R³LIO**, a robust and accurate mobile mapping syst
 
 ## Quick Start
 
-### Real Robot (comming soon)
+### Real Wrold launch
 
 Launch the real-robot pipeline with:
 
